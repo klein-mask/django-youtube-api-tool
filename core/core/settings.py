@@ -137,3 +137,4 @@ STATIC_URL = '/static/'
 
 import pymysql
 pymysql.install_as_MySQLdb()
+

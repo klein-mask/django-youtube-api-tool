@@ -3,7 +3,7 @@ from app.db import MySQLClient
 from django.views.generic import TemplateView
 from app.videos import YoutubeAPIClient
 from app.forms import VideoIdForm
-
+import os
 
 class IndexView(TemplateView):
     template_name = 'app/index.html'
@@ -34,13 +34,17 @@ class VideoView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        
+        """
         form = VideoIdForm(data=request.POST)
         if form.is_valid():
             video_id = form.cleaned_data.get('video_id')
             print(video_id)
-        yac = YoutubeAPIClient('YOUR_API_KEY')
+        print(os.environ.get('YOUTUBE_API_KEY'))
+        yac = YoutubeAPIClient(os.environ.get('YOUTUBE_API_KEY'))
         context['video_data'] = yac.get_video_data(video_id)
+        """
+        yac = YoutubeAPIClient(os.environ.get('YOUTUBE_API_KEY'))
+        yac.get_video_datas_from_channel('UCw8ZhLPdQ0u_Y-TLKd61hGA')
         return self.render_to_response(context)
 
 video = VideoView.as_view()

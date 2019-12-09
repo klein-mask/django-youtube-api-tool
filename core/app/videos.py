@@ -6,6 +6,14 @@ class YoutubeAPIClient:
 
     def __init__(self, api_key):
         self.youtube = build('youtube', 'v3', developerKey=api_key)
+    
+    def get_video_datas_from_channel(self, cid):
+        ret = None
+
+        response = self.youtube.search().list(channelId=cid, part='id,snippet').execute()
+        items = response.get('items')
+        print(items[0])
+
 
     def get_video_data(self, vid):
         ret = None
