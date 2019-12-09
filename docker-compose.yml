@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: master
+      MYSQL_USER: docker_user
+      MYSQL_PASSWORD: docker_pass
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --explicit_defaults_for_timestamp=true
+    ports:
+      - "3306:3306"

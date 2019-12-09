@@ -1,0 +1,32 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+<h3 class="text-center my-4">Youtube動画情報取得</h3>
+<!--
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr class="text-center">
+            <th scope="col">名前</th>
+            <th scope="col">性別</th>
+            <th scope="col">年齢</th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        {% for user in users %}
+        <tr>
+        <th scope="row">{{ user.name }}</th>
+        <td>{{ user.gender_str }}</td>
+        <td>{{ user.age }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+-->
+<div>
+    <form action="{% url 'app:app_video' %}" method="POST">
+        {% csrf_token %}
+        {{ video_id_form }}
+        <input type="submit" value="取得する">
+    </form>
+</div>
+{% endblock content %}
