@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from app.db import MySQLClient
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from app.videos import YoutubeAPIClient
 from app.forms import VideoIdForm, ChannelIdForm, SortChoiceForm
 import os
+from django.contrib.auth.models import User
 
 class IndexView(TemplateView):
     template_name = 'app/index.html'
@@ -51,3 +52,24 @@ class ChannelView(TemplateView):
 
 
 channel = ChannelView.as_view()
+
+
+class VideoListView(ListView):
+    template_name = 'app/video_list.html'
+    model = User
+    context_object_name = 'videos'
+
+    print(User.objects.all())
+    """
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        form = ChannelIdForm(data=request.POST)
+        if form.is_valid():
+            channel_id = form.cleaned_data.get('channel_id')
+
+        context['videos'] = YoutubeAPIClient(os.environ.get('YOUTUBE_API_KEY')).get_video_datas_from_channel(channel_id)
+        context['sort_form'] = SortChoiceForm()
+
+        return self.render_to_response(context)
+    """
+video_list = VideoListView.as_view()
