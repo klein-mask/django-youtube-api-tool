@@ -1,0 +1,18 @@
+{% extends "account/base.html" %}
+
+{% block content %}
+<h3 class="text-center my-4">ログイン画面</h3>
+{% if user.id  %}
+<p>ログインしました．</p>
+<p>こんにちは，{{ user.username }}さん</p>
+<div class="login_handle_container text-center">
+	<a href="{% url 'account:logout_account' %}" class="btn btn-outline-info mr-3" role="button">ログアウト</a>
+</div>
+{% else %}
+<div class="login_handle_container text-center">
+	<a href="{% url 'account:login_index' %}" class="btn btn-outline-info mr-3" role="button">ログイン</a>
+	<a href="{% url 'account:create_account' %}" class="btn btn-outline-danger ml-3" role="button">新規登録</a>
+</div>
+{% endif %}
+
+{% endblock content %}
