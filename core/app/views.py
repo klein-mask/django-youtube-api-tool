@@ -3,8 +3,9 @@ from app.db import MySQLClient
 from django.views.generic import TemplateView, ListView
 from app.videos import YoutubeAPIClient
 from app.forms import VideoIdForm, ChannelIdForm, SortChoiceForm
-import os
 from django.contrib.auth.models import User
+from app.models import Video
+
 
 class IndexView(TemplateView):
     template_name = 'app/index.html'
@@ -26,9 +27,8 @@ class VideoView(TemplateView):
         form = VideoIdForm(data=request.POST)
         if form.is_valid():
             video_id = form.cleaned_data.get('video_id')
-        print(os.environ.get('YOUTUBE_API_KEY'))
-        yac = YoutubeAPIClient(os.environ.get('YOUTUBE_API_KEY'))
-        context['video_data'] = yac.get_video_data(video_id)
+
+        context['video_data'] = YoutubeAPIClient().get_video_data(video_id)
         return self.render_to_response(context)
 
 video = VideoView.as_view()
@@ -43,23 +43,28 @@ class ChannelView(TemplateView):
         if form.is_valid():
             channel_id = form.cleaned_data.get('channel_id')
 
-        context['videos'] = YoutubeAPIClient(os.environ.get('YOUTUBE_API_KEY')).get_video_datas_from_channel(channel_id)
+        context['videos'] = YoutubeAPIClient().get_video_datas_from_channel(channel_id)
         context['sort_form'] = SortChoiceForm()
+
+
+        for d in context['videos']:
+            u = User.objects.filter(username='klein').first()
+            print('型：', type(u))
+            Video(id=d.get('video_id'), title=d.get('title'), user=u).save()
+
+
 
         return self.render_to_response(context)
     
-    #def get(self, request, **kwargs):
-
 
 channel = ChannelView.as_view()
 
 
 class VideoListView(ListView):
     template_name = 'app/video_list.html'
-    model = User
+    model = Video
     context_object_name = 'videos'
 
-    print(User.objects.all())
     """
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)

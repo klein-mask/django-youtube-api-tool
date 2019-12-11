@@ -2,7 +2,7 @@ version: '3'
 services:
   mysql:
     image: mysql
-    container_name: mysql_container
+    container_name: django_mysql_container
     environment:
       MYSQL_ROOT_PASSWORD: root_pass
       MYSQL_DATABASE: master

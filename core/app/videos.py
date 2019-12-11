@@ -1,12 +1,13 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-import json
+import os
 
 class YoutubeAPIClient:
 
-    def __init__(self, api_key):
+    def __init__(self, api_key=os.environ.get('YOUTUBE_API_KEY')):
         self.youtube = build('youtube', 'v3', developerKey=api_key)
-    
+
+
     def get_video_datas_from_channel(self, cid, *, maxResults=10, order='date'):
         ret = []
 
@@ -33,8 +34,8 @@ class YoutubeAPIClient:
             statistics = items[0].get('statistics')
 
             if snippet is not None and statistics != None:
-                print(snippet)
                 ret = {
+                    'video_id': vid,
                     'published': snippet.get('publishedAt'),
                     'title': snippet.get('title'),
                     'view_count': statistics.get('viewCount'),
@@ -45,6 +46,7 @@ class YoutubeAPIClient:
                 }
         return ret
 
+
     def culc_like_percent(self, like, dislike):
         l = float(like)
         dl = float(dislike)
@@ -54,3 +56,9 @@ class YoutubeAPIClient:
         
         return str(percent) + '%'
 
+
+    def get_video_datas(self, video_id_list=[]):
+        ret = []
+        for vid in video_id_list:
+            ret.append(self.get_video_data(vid))
+        return ret
